@@ -314,6 +314,32 @@
   box-shadow: none;
 }
 
+.prompt-meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+  font-size: 0.85rem;
+}
+
+.prompt-counter {
+  margin-left: auto;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.prompt-counter--over {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.prompt-error {
+  margin: 0;
+  color: var(--danger);
+  font-weight: 600;
+}
+
 .loading-spinner {
   display: inline-flex;
   align-items: center;

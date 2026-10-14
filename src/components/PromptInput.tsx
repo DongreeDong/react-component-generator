@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { PROMPT_MAX_LENGTH, getPromptLength, isWithinPromptLimit } from '../utils/promptLimit';
 
 interface PromptInputProps {
   onGenerate: (prompt: string) => void;
@@ -17,9 +18,12 @@ const EXAMPLES = [
 export function PromptInput({ onGenerate, isLoading }: PromptInputProps) {
   const [prompt, setPrompt] = useState('');
 
+  const promptLength = getPromptLength(prompt);
+  const isTooLong = !isWithinPromptLimit(prompt);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (prompt.trim() && !isLoading) {
+    if (prompt.trim() && !isLoading && !isTooLong) {
       onGenerate(prompt.trim());
     }
   };
@@ -50,7 +54,7 @@ export function PromptInput({ onGenerate, isLoading }: PromptInputProps) {
         <button
           type="submit"
           className="btn-generate"
-          disabled={!prompt.trim() || isLoading}
+          disabled={!prompt.trim() || isLoading || isTooLong}
         >
           {isLoading ? (
             <span className="loading-spinner">생성 중...</span>
@@ -59,6 +63,16 @@ export function PromptInput({ onGenerate, isLoading }: PromptInputProps) {
           )}
         </button>
       </form>
+      <div className="prompt-meta">
+        {isTooLong && (
+          <p role="alert" className="prompt-error">
+            프롬프트는 {PROMPT_MAX_LENGTH}자 이내로 입력해주세요.
+          </p>
+        )}
+        <span className={isTooLong ? 'prompt-counter prompt-counter--over' : 'prompt-counter'}>
+          {promptLength} / {PROMPT_MAX_LENGTH}
+        </span>
+      </div>
       <div className="prompt-examples">
         <span className="examples-label">예시 프롬프트</span>
         {EXAMPLES.map((example) => (
