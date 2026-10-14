@@ -4,6 +4,17 @@ import userEvent from '@testing-library/user-event';
 import { PromptInput } from './PromptInput';
 
 describe('PromptInput', () => {
+  describe('최근 프롬프트', () => {
+    it('히스토리 항목을 누르면 입력창에 채워진다', async () => {
+      const user = userEvent.setup();
+      render(<PromptInput onGenerate={vi.fn()} isLoading={false} history={['이전 프롬프트 A']} />);
+
+      await user.click(screen.getByRole('button', { name: '이전 프롬프트 A' }));
+
+      expect(screen.getByRole('textbox')).toHaveValue('이전 프롬프트 A');
+    });
+  });
+
   describe('글자 수 제한 (500자)', () => {
     it('500자 이하이면 입력값으로 생성이 호출된다', async () => {
       const onGenerate = vi.fn();
